@@ -15,7 +15,8 @@ async def download_url(session, url):
 
 async def main():
     urls = ["https://g1.globo.com/rj/rio-de-janeiro", "https://pt.wikipedia.org/wiki/Teoria_dos_grafos",
-            "https://www.themoviedb.org/collection/52749-the-butterfly-effect-collection?language=pt-BR"]
+            "https://www.themoviedb.org/collection/52749-the-butterfly-effect-collection?language=pt-BR",
+            "https://www.correios.com.br/"]
     tempos = []
     async with aiohttp.ClientSession() as session:
         tempos = await asyncio.gather(*(download_url(session, url) for url in urls))
