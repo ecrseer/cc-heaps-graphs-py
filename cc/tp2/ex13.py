@@ -3,24 +3,27 @@ import time
 
 from PIL import Image, ImageFilter
 import os
+import matplotlib.pyplot as plt
 
 
 async def process_image(image_path, output_dir, imagens_filtradas, index_atual):
+    inicio_segs = time.time()
     img = Image.open(image_path)
     img = img.filter(ImageFilter.CONTOUR)
     salvar_em = os.path.join(output_dir, os.path.basename(image_path))
     img.save(salvar_em)
 
-    imagens_filtradas[f'{image_path}'] = {
-        'tempo': time.time(),
+    name = os.path.basename(image_path)
+    kbytes=os.path.getsize(image_path) / 1000
+
+    imagens_filtradas[f'{name}-{kbytes}KByt'] = {
+        'tempo': time.time() - inicio_segs,
         'index': index_atual
     }
 
 
 async def main_image_processing():
-    images_horarios = {'inicio': {
-        'tempo': time.time()
-    }}
+    images_horarios = {}
 
     input_dir = "input_images"
     output_dir = "output_images"
@@ -33,14 +36,32 @@ async def main_image_processing():
     threads_tarefas = [process_image(img, output_dir, images_horarios, index) for index, img in enumerate(images)]
     await asyncio.gather(*threads_tarefas)
 
+    # await tornar_tempos_em_horarios_crescente(images_horarios)
 
+
+    imagens=[img for img in images_horarios]
+    tempos= [images_horarios[img]['tempo'] for img in images_horarios]
+    print(f'imagens:{imagens}')
+    print(f'tempos:{tempos}')
+    plot_this(imagens, tempos)
+
+
+async def tornar_tempos_em_horarios_crescente(images_horarios):
     for image in images_horarios:
-        if(image == 'inicio'):
+        if (image == 'inicio'):
             continue
         images_horarios[image]['tempo'] = images_horarios[image]['tempo'] - images_horarios['inicio']['tempo']
         images_horarios[image]['tempo'] = round(images_horarios[image]['tempo'], 4)
 
-    print(f'gab: {images_horarios}')
+
+def plot_this(concurrency_levels, times):
+    plt.figure(figsize=(18, 5))
+    plt.plot(concurrency_levels, times, marker='o', linestyle='-')
+    plt.xlabel("nome imagem")
+    plt.ylabel("Tempo total (segundos)")
+    plt.title("Filtro em imagens")
+    plt.grid()
+    plt.show()
 
 
 if __name__ == '__main__':
