@@ -36,9 +36,6 @@ async def main_image_processing():
     threads_tarefas = [process_image(img, output_dir, images_horarios, index) for index, img in enumerate(images)]
     await asyncio.gather(*threads_tarefas)
 
-    # await tornar_tempos_em_horarios_crescente(images_horarios)
-
-
     imagens=[img for img in images_horarios]
     tempos= [images_horarios[img]['tempo'] for img in images_horarios]
     print(f'imagens:{imagens}')
@@ -46,12 +43,6 @@ async def main_image_processing():
     plot_this(imagens, tempos)
 
 
-async def tornar_tempos_em_horarios_crescente(images_horarios):
-    for image in images_horarios:
-        if (image == 'inicio'):
-            continue
-        images_horarios[image]['tempo'] = images_horarios[image]['tempo'] - images_horarios['inicio']['tempo']
-        images_horarios[image]['tempo'] = round(images_horarios[image]['tempo'], 4)
 
 
 def plot_this(concurrency_levels, times):
