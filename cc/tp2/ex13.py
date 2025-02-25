@@ -44,7 +44,6 @@ async def main_image_processing():
 
 
 
-
 def plot_this(concurrency_levels, times):
     plt.figure(figsize=(18, 5))
     plt.plot(concurrency_levels, times, marker='o', linestyle='-')
