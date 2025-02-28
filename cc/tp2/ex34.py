@@ -81,8 +81,44 @@ class DoublyLinkedList:
         if new_head:
             self.head = new_head
 
+    def insertion_sort(self):
+        if not self.head or not self.head.next:
+            return
+        current = self.head.next
 
+        while current:
+            next_node = current.next
 
+            sorted_pos = current.prev
+            while sorted_pos and sorted_pos.data > current.data:
+                sorted_pos = sorted_pos.prev
+
+            if current.prev != sorted_pos:
+
+                if current.next:
+                    current.next.prev = current.prev
+                if current.prev:
+                    current.prev.next = current.next
+                else:
+                    self.head = current.next
+
+                self._insertion_sort_swapar(current, sorted_pos)
+
+            current = next_node
+
+    def _insertion_sort_swapar(self, current, sorted_pos):
+        if sorted_pos:
+
+            current.prev = sorted_pos
+            current.next = sorted_pos.next
+            if sorted_pos.next:
+                sorted_pos.next.prev = current
+            sorted_pos.next = current
+        else:
+            current.prev = None
+            current.next = self.head
+            self.head.prev = current
+            self.head = current
 
 
 def demonstra_lista(dll):
@@ -98,30 +134,19 @@ def demonstra_lista(dll):
     dll.inverter()
     dll.traverse_forward()
 
-def exercicio33():
+
+def exercicio34():
     lista_um = DoublyLinkedList()
 
     lista_um.insert_at_beginning(20)
     lista_um.insert_at_beginning(30)
     lista_um.insert_at_end(7)
     lista_um.insert_at_end(40)
-    demonstra_lista(lista_um)
+    lista_um.traverse_forward()
 
-    lista_dois = DoublyLinkedList()
-    lista_dois.insert_at_beginning(1)
-    lista_dois.insert_at_beginning(2)
-    lista_dois.insert_at_end(3)
-    lista_dois.insert_at_end(4)
-    demonstra_lista(lista_dois)
-
-    lista_tres = DoublyLinkedList()
-    lista_tres.insert_at_beginning(1)
-    lista_tres.insert_at_beginning(2)
-    lista_tres.insert_at_end(3)
-    lista_tres.insert_at_end(4)
-    lista_tres.insert_at_end(5)
-    demonstra_lista(lista_tres)
+    lista_um.insertion_sort()
+    lista_um.traverse_forward()
 
 
 if __name__ == "__main__":
-    exercicio33()
+    exercicio34()
