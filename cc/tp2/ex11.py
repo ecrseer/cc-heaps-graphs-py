@@ -28,20 +28,31 @@ async def main():
         "https://www.mercadolivre.com.br/",
         "https://www.gov.br/",
         "https://www.infomoney.com.br/",
-        "https://www.olx.com.br/"
+        "https://www.olx.com.br/",
+        "https://lms.infnet.edu.br/moodle",
+        "https://g1.globo.com/"
     ]
-    tempos = []
+
+    tempo_testes = []
     async with aiohttp.ClientSession() as session:
-        tempos = await asyncio.gather(*(download_url(session, url) for url in urls))
-        plot_this(urls, tempos)
+        testes = [16, 8, 4, 2]
+        for qtd_threads in testes:
+            inicio = time.time()
+            requisicoes = urls[0:qtd_threads]
+            downloads_gnrs = (download_url(session, url) for url in requisicoes)
+            await asyncio.gather(*downloads_gnrs)
+            duracao = time.time() - inicio
+            tempo_testes.append(duracao)
+
+        plot_this(testes, tempo_testes)
 
 
 def plot_this(concurrency_levels, times):
-    plt.figure(figsize=(8, 5))
+    plt.figure(figsize=(18, 5))
     plt.plot(concurrency_levels, times, marker='o', linestyle='-')
-    plt.xlabel("site")
-    plt.ylabel("Tempo total (segundos)")
-    plt.title("Carregamento de sites")
+    plt.xlabel("Quantidade sites(threads)")
+    plt.ylabel("Tempo total (milissegundos)")
+    plt.title("Carregamento de sites simultaneos")
     plt.grid()
     plt.show()
 
