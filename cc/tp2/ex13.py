@@ -48,7 +48,7 @@ def plot_this(concurrency_levels, times):
     plt.figure(figsize=(18, 5))
     plt.plot(concurrency_levels, times, marker='o', linestyle='-')
     plt.xlabel("nome imagem")
-    plt.ylabel("Tempo total (segundos)")
+    plt.ylabel("Tempo total (milissegundos)")
     plt.title("Filtro em imagens")
     plt.grid()
     plt.show()
