@@ -50,11 +50,10 @@ def measure_time(sort_function, arr):
     return time.time() - start, sorted_arr
 
 
-if __name__ == "__main__":
-    sizes = [2**i for i in range(10, 18)]  # Tamanhos de 1024 até 131072
+def exercicio_53():
+    sizes = [2 ** i for i in range(10, 18)]  # Tamanhos de 1024 até 131072
     sequential_times = []
     parallel_times = []
-
     for size in sizes:
         arr = [random.randint(0, 100000) for _ in range(size)]
 
@@ -65,8 +64,6 @@ if __name__ == "__main__":
         parallel_times.append(par_time)
 
         print(f"Tamanho: {size} | Sequencial: {seq_time:.6f}s | Paralelo: {par_time:.6f}s")
-
-
     plt.figure(figsize=(8, 10))
     plt.plot(sizes, sequential_times, 'r-o', label="MergeSort Sequencial")
     plt.plot(sizes, parallel_times, 'b-o', label="MergeSort Paralelo")
@@ -76,3 +73,7 @@ if __name__ == "__main__":
     plt.legend()
     plt.grid()
     plt.show()
+
+
+if __name__ == "__main__":
+    exercicio_53()
