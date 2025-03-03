@@ -85,17 +85,18 @@ class DoublyLinkedList:
 
 
 
-def demonstra_lista(dll):
+def demonstra_lista(dll, valor_buscado=30):
     print("----")
-    print("Percorrendo  ")
+    print("----")
+    print("Lista encadeada:  ")
     dll.traverse_forward()
 
     print(f"""
-     Index 30 {dll.obter_index(30)}
-        Index 4  {dll.obter_index(4)}
+     Posicao do valor buscada {valor_buscado} {dll.obter_index(valor_buscado)}
     """)
 
     dll.inverter()
+    print("lista invertida: ")
     dll.traverse_forward()
 
 def exercicio33():
@@ -103,24 +104,24 @@ def exercicio33():
 
     lista_um.insert_at_beginning(20)
     lista_um.insert_at_beginning(30)
-    lista_um.insert_at_end(7)
     lista_um.insert_at_end(40)
+    lista_um.insert_at_end(7)
     demonstra_lista(lista_um)
 
     lista_dois = DoublyLinkedList()
     lista_dois.insert_at_beginning(1)
     lista_dois.insert_at_beginning(2)
-    lista_dois.insert_at_end(3)
+    lista_dois.insert_at_end(88)
     lista_dois.insert_at_end(4)
-    demonstra_lista(lista_dois)
+    demonstra_lista(lista_dois,88)
 
     lista_tres = DoublyLinkedList()
-    lista_tres.insert_at_beginning(1)
+    lista_tres.insert_at_beginning(55)
     lista_tres.insert_at_beginning(2)
     lista_tres.insert_at_end(3)
     lista_tres.insert_at_end(4)
     lista_tres.insert_at_end(5)
-    demonstra_lista(lista_tres)
+    demonstra_lista(lista_tres,55)
 
 
 if __name__ == "__main__":

@@ -145,6 +145,7 @@ def exercicio34():
     lista_um.traverse_forward()
 
     lista_um.insertion_sort()
+    print("Depois de ordenar:")
     lista_um.traverse_forward()
 
 

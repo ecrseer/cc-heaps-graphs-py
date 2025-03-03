@@ -1,4 +1,7 @@
-class Node:
+import time
+
+
+class DNode:
     def __init__(self, data):
         self.data = data
         self.next = None
@@ -10,14 +13,14 @@ class DoublyLinkedList:
         self.head = None
 
     def insert_at_beginning(self, data):
-        new_node = Node(data)
+        new_node = DNode(data)
         if self.head is not None:
             self.head.prev = new_node
         new_node.next = self.head
         self.head = new_node
 
     def insert_at_end(self, data):
-        new_node = Node(data)
+        new_node = DNode(data)
         if self.head is None:
             self.head = new_node
             return
@@ -60,19 +63,31 @@ class DoublyLinkedList:
         print("None")
 
 
-dll = DoublyLinkedList()
 
-dll.insert_at_beginning(10)
-dll.insert_at_beginning(20)
-dll.insert_at_end(30)
-dll.insert_at_end(40)
+def demonstracao_tempo(a,b,c,d):
+    inicio = time.time()
+    dll = DoublyLinkedList()
 
-print("Percorrendo da frente para trás:")
-dll.traverse_forward()
+    dll.insert_at_beginning(a)
+    dll.insert_at_beginning(b)
+    dll.insert_at_end(c)
+    dll.insert_at_end(d)
 
-print("Percorrendo de trás para frente:")
-dll.traverse_backward()
+    print("Percorrendo da frente para trás:")
+    dll.traverse_forward()
 
-dll.remove(20)
-print("Lista após remoção de 20 (frente para trás):")
-dll.traverse_forward()
+    print("Percorrendo de trás para frente:")
+    dll.traverse_backward()
+
+    dll.remove(20)
+    print("Lista após remoção de 20 (frente para trás):")
+    dll.traverse_forward()
+    return time.time() - inicio
+
+tempos = [
+demonstracao_tempo(10,20,30,40),
+demonstracao_tempo(32,45,67,89),
+demonstracao_tempo(23,11,67,7) ]
+
+media = sum(tempos) / len(tempos)
+print(f"Tempo médio de execução: {media:.6f} milissegundos")

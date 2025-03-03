@@ -1,3 +1,6 @@
+import time
+
+
 class Node:
     def __init__(self, data):
         self.data = data
@@ -45,21 +48,31 @@ class LinkedList:
 
 
 
+def demonstracao_tempo(a,b,c,d):
+    inicio = time.time()
+    linked_list = LinkedList()
 
-linked_list = LinkedList()
+    linked_list.insert_at_beginning(a)
+    linked_list.insert_at_beginning(b)
+    linked_list.insert_at_end(c)
+    linked_list.insert_at_end(d)
 
-linked_list.insert_at_beginning(50)
-linked_list.insert_at_beginning(10)
-linked_list.insert_at_end(40)
-linked_list.insert_at_end(60)
+    print("Lista encadeads:")
+    linked_list.traverse()
 
-print("Lista encadeads:")
-linked_list.traverse()
+    linked_list.remove(b)
+    print(f"Depois de remoção do nro {b}:")
+    linked_list.traverse()
 
-linked_list.remove(40)
-print("Depois de remoção do nro 40:")
-linked_list.traverse()
+    linked_list.remove(c)
+    print(f"Depois de remoção do nro {c}:")
+    linked_list.traverse()
+    return time.time() - inicio
 
-linked_list.remove(50)
-print("Depois de remoção do nro 50:")
-linked_list.traverse()
+tempos = [
+demonstracao_tempo(10,20,30,40),
+demonstracao_tempo(32,45,67,89),
+demonstracao_tempo(23,11,67,7) ]
+
+media = sum(tempos) / len(tempos)
+print(f"Tempo médio de execução: {media:.6f} milissegundos")
