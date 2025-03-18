@@ -1,3 +1,6 @@
+import time
+import matplotlib.pyplot as plt
+
 class Node:
     def __init__(self, valor):
         self.valor = valor
@@ -26,37 +29,6 @@ class ArvoreBinaria:
                 node.right = Node(valor)
             else:
                 self._add_no_node(valor, node.right)
-
-    def buscar(self, valor):
-        if self.root is None:
-            return False
-        else:
-            return self._buscar_no_node(self.root, valor)
-
-    def _buscar_no_node(self, node_atual, valor):
-        if node_atual is None:
-            return False
-        if valor == node_atual.valor:
-            return True
-        if valor < node_atual.valor:
-            return self._buscar_no_node(node_atual.left, valor)
-        return self._buscar_no_node(node_atual.right, valor)
-
-    def busca_min(self):
-        if self.root is None:
-            return None
-        atual = self.root
-        while atual.left is not None:
-            atual = atual.left
-        return atual.valor
-
-    def busca_max(self):
-        if self.root is None:
-            return None
-        atual = self.root
-        while atual.right is not None:
-            atual = atual.right
-        return atual.valor
 
     def inorder(self):
         return self._traverse_inorder(self.root, [])
@@ -91,13 +63,42 @@ class ArvoreBinaria:
 
 def exercicio11():
     arvore = ArvoreBinaria()
-    notas = [50, 30, 70, 20, 40, 60, 80]
+    notas=[50, 30, 70, 20, 40, 60, 80, 5, 11, 12, 72, 1, 63, 94, 72, 74, 77, 95, 40, 39, 32, 25, 65, 5, 53, 61, 65, 59, 50, 6, 78, 96, 3, 0, 82, 24, 93, 93, 99, 44, 78, 11, 37, 43, 66, 32, 85, 100, 46, 77, 99, 29, 72, 69, 71, 46, 82]
+
     for nota in notas:
         arvore.add(nota)
 
-    print("In-order:", arvore.inorder())
-    print("Pre-order:", arvore.preorder())
-    print("Post-order:", arvore.postorder())
+    print("\n---- exercicio 11 ----")
+    print("\nValores:", notas)
 
+    tempos = []
+    percursos = ["In-order", "Pre-order", "Post-order"]
+
+    inicio = time.time()
+    inorder = arvore.inorder()
+    tempos.append(time.time() - inicio)
+    print(f"In-order ({tempos[-1]:.6f}s):", inorder)
+
+    inicio = time.time()
+    preorder = arvore.preorder()
+    tempos.append(time.time() - inicio)
+    print(f"Pre-order ({tempos[-1]:.6f}s):", preorder)
+
+    inicio = time.time()
+    postorder = arvore.postorder()
+    tempos.append(time.time() - inicio)
+    print(f"Post-order ({tempos[-1]:.6f}s):", postorder)
+
+    plot_this(percursos, tempos)
+
+
+def plot_this(percursos, tempos):
+    plt.figure(figsize=(8, 5))
+    plt.plot(percursos, [t * 1000 for t in tempos], marker='o', linestyle='-', color='b')
+    plt.xlabel("Tipo de Percurso")
+    plt.ylabel("Tempo total (ms)")
+    plt.title("Tempos de Execução dos Percursos na Árvore Binária")
+    plt.grid()
+    plt.show()
 
 exercicio11()

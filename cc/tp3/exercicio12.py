@@ -1,3 +1,7 @@
+import time
+import matplotlib.pyplot as plt
+
+
 class Node:
     def __init__(self, valor):
         self.valor = valor
@@ -27,36 +31,34 @@ class ArvoreBinaria:
             else:
                 self._add_no_node(valor, node.right)
 
-    def buscar(self, valor):
-        if self.root is None:
-            return False
+    def remover(self, valor):
+        self.root = self._remover_no(self.root, valor)
+
+    def _remover_no(self, node, valor):
+        if node is None:
+            return node
+
+        if valor < node.valor:
+            node.left = self._remover_no(node.left, valor)
+        elif valor > node.valor:
+            node.right = self._remover_no(node.right, valor)
         else:
-            return self._buscar_no_node(self.root, valor)
+            if node.left is None:
+                return node.right
+            elif node.right is None:
+                return node.left
 
-    def _buscar_no_node(self, node_atual, valor):
-        if node_atual is None:
-            return False
-        if valor == node_atual.valor:
-            return True
-        if valor < node_atual.valor:
-            return self._buscar_no_node(node_atual.left, valor)
-        return self._buscar_no_node(node_atual.right, valor)
+            sucessor = self._min_value_node(node.right)
+            node.valor = sucessor.valor
+            node.right = self._remover_no(node.right, sucessor.valor)
 
-    def busca_min(self):
-        if self.root is None:
-            return None
-        atual = self.root
+        return node
+
+    def _min_value_node(self, node):
+        atual = node
         while atual.left is not None:
             atual = atual.left
-        return atual.valor
-
-    def busca_max(self):
-        if self.root is None:
-            return None
-        atual = self.root
-        while atual.right is not None:
-            atual = atual.right
-        return atual.valor
+        return atual
 
     def inorder(self):
         return self._traverse_inorder(self.root, [])
@@ -89,15 +91,37 @@ class ArvoreBinaria:
         return result
 
 
-def exercicio11():
+def exercicio_12():
     arvore = ArvoreBinaria()
     notas = [50, 30, 70, 20, 40, 60, 80]
     for nota in notas:
         arvore.add(nota)
 
-    print("In-order:", arvore.inorder())
-    print("Pre-order:", arvore.preorder())
-    print("Post-order:", arvore.postorder())
+    print("\n---- Remoção de Nós ----")
+
+    tempos_remocao = []
 
 
-exercicio11()
+    nos_para_remover = [20, 30, 50]
+
+    for valor in nos_para_remover:
+        inicio = time.time()
+        arvore.remover(valor)
+        fim = time.time() - inicio
+        tempos_remocao.append(fim)
+        print(f"Removido {valor} ({fim:.12f}s)")
+
+    plot_this(nos_para_remover, tempos_remocao)
+
+
+def plot_this(nos_removidos, tempos):
+    plt.figure(figsize=(8, 5))
+    plt.plot(nos_removidos, tempos, marker='o', linestyle='-')
+    plt.xlabel("Nó Removido")
+    plt.ylabel("Tempo de Remoção (ms)")
+    plt.title("Tempos de Remoção na BST")
+    plt.grid()
+    plt.show()
+
+
+exercicio_12()
