@@ -5,8 +5,8 @@ class MinHeap:
     def _heapify(self, indice, tamanho):
         """Ajusta o heap para manter a propriedade do heap mínimo"""
         menor = indice
-        esq = 2 * indice + 1  # Filho esquerdo
-        dir = 2 * indice + 2  # Filho direito
+        esq = 2 * indice + 1
+        dir = 2 * indice + 2
 
         if esq < tamanho and self.heap[esq][1] < self.heap[menor][1]:
             menor = esq
@@ -22,7 +22,7 @@ class MinHeap:
         self.heap.append((nome, prioridade))
         indice = len(self.heap) - 1
 
-        # Ajusta o heap para manter a propriedade do heap mínimo
+
         while indice > 0:
             pai = (indice - 1) // 2
             if self.heap[indice][1] < self.heap[pai][1]:
@@ -38,17 +38,17 @@ class MinHeap:
         if len(self.heap) == 1:
             return self.heap.pop()
 
-        # O item de menor prioridade está na raiz (índice 0)
+
         raiz = self.heap[0]
         self.heap[0] = self.heap.pop()
 
-        # Reajusta o heap após remover o item
+
         self._heapify(0, len(self.heap))
 
         return raiz
 
 
-# Função para solicitar os dados ao usuário
+
 def solicitar_dados():
     fila = MinHeap()
     fila.inserir('Amanda - febre', 2)
@@ -56,8 +56,15 @@ def solicitar_dados():
     fila.inserir('Eduarda - sangramento', 5)
     fila.inserir('Carla - dor nas costas', 3)
     fila.inserir('Daniel - dor de garganta', 1)
-    for paciente in fila.heap:
+
+
+    paciente = fila.remover()
+    while paciente is not  None:
         print(f"Próximo paciente: {paciente[0]} - prioridade {paciente[1]}")
+        paciente = fila.remover()
+
+    print("Fila de prioridade vazia.")
+
 
 
 if __name__ == "__main__":
