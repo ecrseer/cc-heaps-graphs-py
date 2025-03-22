@@ -1,26 +1,22 @@
 class TrieNode:
     """Classe que representa um nó na Trie"""
-
     def __init__(self):
-        self.children = {}
-        self.is_end_of_word = False
-
+        self.children = {}  # Dicionário de filhos
+        self.is_end_of_word = False  # Indica se é o final de uma palavra
 
 class Trie:
-    """Classe que representa a Trie"""
-
     def __init__(self):
         self.root = TrieNode()
 
-    def insert(self, word):
+    def add_palavra(self, palavra):
         node = self.root
-        for char in word:
+        for char in palavra:
             if char not in node.children:
                 node.children[char] = TrieNode()
             node = node.children[char]
         node.is_end_of_word = True
 
-    def search(self, word):
+    def pesquissa(self, word):
         node = self.root
         for char in word:
             if char not in node.children:
@@ -28,61 +24,30 @@ class Trie:
             node = node.children[char]
         return node.is_end_of_word
 
-
-    def delete(self, word):
-
-        def _delete(node, word, depth):
-            if depth == len(word):
-                if not node.is_end_of_word:
-                    return False
-                node.is_end_of_word = False
-                return len(node.children) == 0
-
-            char = word[depth]
-            if char not in node.children:
-                return False
-
-            should_delete_child = _delete(node.children[char], word, depth + 1)
-
-            if should_delete_child:
-                del node.children[char]
-                return len(node.children) == 0 and not node.is_end_of_word
-
-            return False
-
-        _delete(self.root, word, 0)
-
     def list_words(self):
-
-        def _dfs(node, prefix, words):
+        def _busca_nivel_abaixo(node, prefix, words):
             if node.is_end_of_word:
                 words.append(prefix)
             for char, child in node.children.items():
-                _dfs(child, prefix + char, words)
+                _busca_nivel_abaixo(child, prefix + char, words)
 
         words = []
-        _dfs(self.root, "", words)
+        _busca_nivel_abaixo(self.root, "", words)
         return words
 
 
+
+#populando
 trie = Trie()
-trie.insert("carro")
-trie.insert("casa")
-trie.insert("carteira")
-trie.insert("cavalo")
+trie.add_palavra("casa")
+trie.add_palavra("carro")
 
-print("Palavras na Trie:", trie.list_words())
+print("Listando todas palavras dentro da PRefix Trie:", trie.list_words())
 
-print("Buscar 'carro':", trie.search("carro"))
-print("Buscar 'cavalo':", trie.search("cavalo"))
-print("Buscar 'caminho':", trie.search("caminho"))
+print("A palavra 'casa': está contida na prefix Trie?", trie.pesquissa("casa"))
+print("A palavra 'carro': está contida na prefix Trie?", trie.pesquissa("carro"))
+print("A palavra 'roxo': está contida na prefix Trie?", trie.pesquissa("roxo"))
 
-trie.insert("caminho")
-print("Palavras na Trie:", trie.list_words())
-print("Buscar 'caminho':", trie.search("caminho"))
 
-trie.delete("carro")
-print("Palavras na Trie:", trie.list_words())
-
-trie.delete("carteira")
+trie.add_palavra("caminho")
 print("Palavras na Trie:", trie.list_words())
