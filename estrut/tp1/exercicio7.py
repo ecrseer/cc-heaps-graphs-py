@@ -36,7 +36,6 @@ class Trie:
         return words
 
 
-
 #populando
 trie = Trie()
 trie.add_palavra("casa")
