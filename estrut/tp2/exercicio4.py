@@ -36,6 +36,7 @@ grafo = Grafo()
 
 for v in ["Centro", "Bairro A", "Bairro B", "Bairro C", "Bairro D"]:
     grafo.adicionar_vertice(v)
+    
 
 arestas = [("Centro", "Bairro A"), ("Centro", "Bairro B"),
            ("Bairro A", "Bairro C"), ("Bairro B", "Bairro C"),
