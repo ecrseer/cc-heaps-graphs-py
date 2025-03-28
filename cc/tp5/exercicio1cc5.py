@@ -1,3 +1,6 @@
+import time
+
+
 class GrafPondDijkstra:
     def __init__(self):
         self.vertices = {}
@@ -39,27 +42,49 @@ print("""------------------------------------------
 exercicio 1.1 - Dijkstra (Caminhos Mínimos):
 ------------------------------------------""")
 
-vertices_adjacen = {
+vertices_adja = {
     "A": [("B", 1), ("C", 4)],
     "B": [("A", 1), ("C", 2), ("D", 5)],
     "C": [("A", 4), ("B", 2), ("D", 1)],
     "D": [("B", 5), ("C", 1)]
 }
 
-print(f"Vertices Adjacentes: ")
-for vertice, vizinhos in vertices_adjacen.items():
-    print(f"{vertice}: {vizinhos}")
 
-grafoLgst = GrafPondDijkstra()
-grafoLgst.vertices = vertices_adjacen
+def testar_dijkstra(vertices_adjacen, origem="A", destino="D"):
+    print("""
+    ------------------------------------------
+    Vertices Adjacentes: """)
+    for vertice, vizinhos in vertices_adjacen.items():
+        print(f"{vertice}: {vizinhos}")
 
-origem = "A"
-destino = "D"
-distancias, predecessores = grafoLgst.dijkstra(origem)
-caminho = grafoLgst.menor_caminho(origem, destino, predecessores)
+    grafoLgst = GrafPondDijkstra()
+    grafoLgst.vertices = vertices_adjacen
 
-print("\nvertices adjacentes:")
-for vertice, distancia in distancias.items():
-    print(f"Distância até {vertice}: {distancia}")
+    inicio = time.time()
+    distancias, predecessores = grafoLgst.dijkstra(origem)
+    caminho = grafoLgst.menor_caminho(origem, destino, predecessores)
 
-print(f"\nMelhor rota de {origem} para {destino}: {' => '.join(caminho)}")
+    duracao = time.time() - inicio
+    print("\nvertices adjacentes:")
+    for vertice, distancia in distancias.items():
+        print(f"Distância até {vertice}: {distancia}")
+
+    print(f"\nMelhor rota de {origem} para {destino}: {' => '.join(caminho)}")
+    print(f"Duracao para dijkstra: {duracao:12f} segundos")
+
+
+testar_dijkstra(vertices_adja)
+
+vertices_adj_rj = {
+    "COP": [("LAG", 6), ("BTA", 2)],
+    "LAG": [("COP", 6), ("BTA", 4), ("GAV", 3)],
+    "BTA": [("COP", 2), ("LAG", 4), ("GAV", 8)],
+    "GAV": [("LAG", 3), ("BTA", 8), ("LEM", 7)],  # <-- Conectando os grupos
+
+    "LEM": [("JPA", 1), ("STA", 5), ("GAV", 7)],  # <-- Conectando os grupos
+    "JPA": [("LEM", 1), ("STA", 3), ("MDR", 7)],
+    "STA": [("LEM", 5), ("JPA", 3), ("MDR", 2)],
+    "MDR": [("JPA", 7), ("STA", 2)]
+}
+
+testar_dijkstra(vertices_adj_rj, "COP", "MDR")

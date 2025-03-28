@@ -1,65 +1,100 @@
-class GrafPondDijkstra:
-    def __init__(self):
-        self.vertices = {}
+import time
 
-    def dijkstra(self, origem):
-        nao_visitados = list(self.vertices.keys())
-        distancias = {cidade: float("inf") for cidade in self.vertices}
-        distancias[origem] = 0
-        predecessores = {}
 
-        while nao_visitados:
-            bairro_atual = min(nao_visitados, key=lambda bairro: distancias[bairro])
+class PrimGrafoFibraOtica:
+    def __init__(self, bairros):
+        self.bairros = bairros
+        self.V = len(bairros)
+        self.grafo = [[0] * self.V for _ in range(self.V)]
 
-            if distancias[bairro_atual] == float("inf"):
-                break
+    def adicionar_aresta(self, origem, destino, peso):
 
-            for vizinho, distancia in self.vertices[bairro_atual]:
-                nova_distancia = distancias[bairro_atual] + distancia
-                if nova_distancia < distancias[vizinho]:
-                    distancias[vizinho] = nova_distancia
-                    predecessores[vizinho] = bairro_atual
+        u, v = self.obtem_indice_por_nome(origem, destino)
+        self.grafo[u][v] = peso
+        self.grafo[v][u] = peso
 
-            nao_visitados.remove(bairro_atual)
+    def obtem_indice_por_nome(self, origem, destino):
+        u = self.bairros.index(origem)
+        v = self.bairros.index(destino)
+        return u, v
 
-        return distancias, predecessores
+    def prim(self):
+        infinito = float('inf')
+        selecionado = [False] * self.V
+        chave = [infinito] * self.V
+        pai = [-1] * self.V
+        chave[0] = 0
 
-    def menor_caminho(self, origem, destino, predecessores):
-        caminho = []
-        bairro_atual = destino
-        while bairro_atual in predecessores:
-            caminho.append(bairro_atual)
-            bairro_atual = predecessores[bairro_atual]
-        caminho.append(origem)
-        caminho.reverse()
-        return caminho
+        for _ in range(self.V):
+            minimo = infinito
+            vertice_selecionado = -1
+            for v in range(self.V):
+                if not selecionado[v] and chave[v] < minimo:
+                    minimo = chave[v]
+                    vertice_selecionado = v
+
+            selecionado[vertice_selecionado] = True
+
+            for v in range(self.V):
+                if 0 < self.grafo[vertice_selecionado][v] < chave[v] and not selecionado[v]:
+                    chave[v] = self.grafo[vertice_selecionado][v]
+                    pai[v] = vertice_selecionado
+
+        print("""
+        
+        ------------------------------------------
+        Arestas da Árvore Geradora Mínima:
+        """)
+        custo_total = 0
+        for i in range(1, self.V):
+            origem = self.bairros[pai[i]]
+            destino = self.bairros[i]
+            print(f"{origem} - {destino} (Peso: {self.grafo[i][pai[i]]})")
+            custo_total += self.grafo[i][pai[i]]
+        print(f"\nPeso total da AGM: {custo_total}")
 
 
 print("""------------------------------------------
-exercicio 1.1 - Dijkstra (Caminhos Mínimos):
+Exercício 1.2 - Algoritmo de prim (Àrvore geradora mínima)
 ------------------------------------------""")
 
-vertices_adjacen = {
-    "A": [("B", 1), ("C", 4)],
-    "B": [("A", 1), ("C", 2), ("D", 5)],
-    "C": [("A", 4), ("B", 2), ("D", 1)],
-    "D": [("B", 5), ("C", 1)]
-}
 
-print(f"Vertices Adjacentes: ")
-for vertice, vizinhos in vertices_adjacen.items():
-    print(f"{vertice}: {vizinhos}")
+def testar_prim(bairros, arestas):
+    g = PrimGrafoFibraOtica(bairros)
 
-grafoLgst = GrafPondDijkstra()
-grafoLgst.vertices = vertices_adjacen
+    for origem, destino, peso in arestas:
+        g.adicionar_aresta(origem, destino, peso)
+    inicio = time.time()
+    g.prim()
+    duracao = time.time() - inicio
+    print(f"""Tempo de execução para
+     o algoritmo de prim encontrar a 
+     minima árvore geradora: {duracao:.12f} segundos""")
 
-origem = "A"
-destino = "D"
-distancias, predecessores = grafoLgst.dijkstra(origem)
-caminho = grafoLgst.menor_caminho(origem, destino, predecessores)
 
-print("\nvertices adjacentes:")
-for vertice, distancia in distancias.items():
-    print(f"Distância até {vertice}: {distancia}")
+bairros = ["Copacabana", "Ipanema", "Leblon", "Botafogo", "Tijuca", "Centro"]
+arestas = [
+    ("Copacabana", "Ipanema", 4), ("Copacabana", "Leblon", 2), ("Ipanema", "Leblon", 5),
+    ("Ipanema", "Botafogo", 10), ("Leblon", "Botafogo", 8), ("Leblon", "Tijuca", 3),
+    ("Botafogo", "Tijuca", 7), ("Botafogo", "Centro", 6), ("Tijuca", "Centro", 1)
+]
+testar_prim(bairros, arestas)
 
-print(f"\nMelhor rota de {origem} para {destino}: {' => '.join(caminho)}")
+print("\nTestando com bairros de São Paulo....")
+
+bairros_sp = [
+    "Pinheiros", "Vila Madalena", "Jardins", "Bela Vista", "Consolação", "Sé",
+    "Moema", "Itaim Bibi", "Brooklin", "Santana", "Tatuapé", "Liberdade"
+]
+
+arestas_sp = [
+    ("Pinheiros", "Vila Madalena", 3), ("Pinheiros", "Jardins", 4), ("Vila Madalena", "Jardins", 2),
+    ("Jardins", "Bela Vista", 6), ("Bela Vista", "Consolação", 1), ("Consolação", "Sé", 5),
+    ("Sé", "Liberdade", 3), ("Sé", "Bela Vista", 2), ("Liberdade", "Tatuapé", 7),
+    ("Tatuapé", "Santana", 8), ("Santana", "Consolação", 9), ("Moema", "Itaim Bibi", 2),
+    ("Itaim Bibi", "Brooklin", 3), ("Brooklin", "Moema", 4), ("Brooklin", "Vila Madalena", 6),
+    ("Moema", "Pinheiros", 7), ("Bela Vista", "Itaim Bibi", 5), ("Liberdade", "Brooklin", 8)
+]
+
+testar_prim(bairros_sp, arestas_sp)
+
