@@ -36,7 +36,7 @@ class GrafoPonderado:
             self.vertices[cidade] = {}
             self.listaAdj.adicionar_vertice(cidade)
 
-    def adicionar_estrada(self, cidade1, cidade2, tempo):
+    def adicionar_rua(self, cidade1, cidade2, tempo):
         self.vertices[cidade1][cidade2] = tempo
         self.vertices[cidade2][cidade1] = tempo
         self.listaAdj.adicionar_aresta(cidade1, cidade2)
@@ -73,16 +73,16 @@ class GrafoPonderado:
 
 
 print("""------------------------------------------
-exercicio 1 - logistica entregas:
+exercicio 2 - Roteamento onibus:
 ------------------------------------------""")
 
 logistica = GrafoPonderado()
-centros_distri = ["Cop", "Bot", "Cax", "Dac", "Fla", "Gav"]
+bairros = ["Cop", "Bot", "Cax", "Dac", "Fla", "Gav"]
 
-for centro in centros_distri:
-    logistica.adicionar_vertic(centro)
+for bairr in bairros:
+    logistica.adicionar_vertic(bairr)
 
-conexoes = [
+ruas = [
     ("Cop", "Bot", 4), ("Cop", "Cax", 3), ("Cop", "Gav", 5),
     ("Bot", "Dac", 2), ("Bot", "Gav", 6),
     ("Cax", "Fla", 7), ("Cax", "Gav", 4),
@@ -90,20 +90,16 @@ conexoes = [
     ("Gav", "Fla", 5)
 ]
 
-for centro1, centro2, distancia in conexoes:
-    logistica.adicionar_estrada(centro1, centro2, distancia)
+for centro1, centro2, distancia in ruas:
+    logistica.adicionar_rua(centro1, centro2, distancia)
 
 print("""
-Demonstrando lista de adjacencia dos centros:""")
+Bairros e adjacencias:""")
 logistica.listaAdj.mostrar_grafo()
-
-print("""
-demonstrando vizinhos do centro Bot:""")
-logistica.listaAdj.mostrar_vizinhos("Bot")
 
 origem = "Cax"
 destino = "Bot"
-print(f"\nEncontrando a rota mais curta entre o centro {origem} e centro {destino}: ")
+print(f"\nEncontrando a rota  de onibus mais curta entre o bairro {origem} e centro {destino}: ")
 rota, distancia = logistica.dijkstra(origem, destino)
 
 print(f"\nMelhor rota de {origem} para {destino}:\n {' => '.join(rota)}")
