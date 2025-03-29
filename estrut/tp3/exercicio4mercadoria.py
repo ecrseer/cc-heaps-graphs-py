@@ -71,36 +71,35 @@ class GrafoPonderado:
 
         return caminho, distancias[destino]
 
-
 print("""------------------------------------------
-exercicio 3 - Rede transportes - Aeroporto@:
+exercicio 4 - Transporte de mercadorias - Djkstra:
 ------------------------------------------""")
 
 logistica = GrafoPonderado()
 
-aeroportos = ["GRU", "GIG", "BSB", "CNF", "SDU", "POA"]
+cidades = ["SP", "RJ", "BSB", "BH", "FLN", "POA"]
 
-for aeroporto in aeroportos:
-    logistica.adicionar_vertic(aeroporto)
+for cidade in cidades:
+    logistica.adicionar_vertic(cidade)
 
 rotas = [
-    ("GRU", "GIG", 4), ("GRU", "BSB", 3), ("GRU", "POA", 5),
-    ("GIG", "CNF", 2), ("GIG", "POA", 6),
-    ("BSB", "SDU", 7), ("BSB", "POA", 4),
-    ("CNF", "SDU", 6), ("CNF", "POA", 3),
-    ("POA", "SDU", 5)
+    ("SP", "RJ", 4), ("SP", "BSB", 3), ("SP", "POA", 5),
+    ("RJ", "BH", 2), ("RJ", "POA", 6),
+    ("BSB", "FLN", 7), ("BSB", "POA", 4),
+    ("BH", "FLN", 6), ("BH", "POA", 3),
+    ("POA", "FLN", 5)
 ]
 
-for centro1, centro2, distancia in rotas:
-    logistica.adicionar_rua(centro1, centro2, distancia)
+for cidade1, cidade2, distancia in rotas:
+    logistica.adicionar_rua(cidade1, cidade2, distancia)
 
 print("""
-Bairros e adjacencias:""")
+Cidades e adjacências:""")
 logistica.listaAdj.mostrar_grafo()
 
-origem = "GIG"
-destino = "SDU"
-print(f"\nEncontrando a rota  de onibus mais curta entre o bairro {origem} e centro {destino}: ")
+origem = "RJ"
+destino = "FLN"
+print(f"\nEncontrando a rota mais curta entre {origem} e {destino}: ")
 rota, distancia = logistica.dijkstra(origem, destino)
 
 print(f"\nMelhor rota de {origem} para {destino}:\n {' => '.join(rota)}")
