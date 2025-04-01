@@ -15,10 +15,10 @@ class MatrizGrafo:
         return u, v
 
     def exibir_grafo(self):
-        print("Matriz de Adjacência:")
-        print("  ", "  ".join(self.vertice))
-        for linha in self.grafo:
-            print(f"  {linha}")
+        print("\nMatriz de Adjacência:")
+        print("   " + "  ".join(self.vertice))  # Header row
+        for i, linha in enumerate(self.grafo):
+            print(f"{self.vertice[i]} {linha}")  # Row header + matrix row
 
 
 print("""------------------------------------------
