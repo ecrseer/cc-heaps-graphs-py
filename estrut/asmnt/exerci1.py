@@ -2,37 +2,37 @@ class MinHeap:
     def __init__(self):
         self.heap = []
 
-    def _heapify(self, indice, tamanho):
-        """Ajusta o heap para manter a propriedade do heap mínimo"""
-        menor = indice
-        filho_esq = 2 * indice + 1
-        filho_direito = 2 * indice + 2
+    def _heapify_up(self, index):
+        """Ajusta o heap para cima."""
+        parent_index = (index - 1) // 2
+        while index > 0 and self.heap[index][1] < self.heap[parent_index][1]:
+            self.heap[index], self.heap[parent_index] = self.heap[parent_index], self.heap[index]
+            index = parent_index
+            parent_index = (index - 1) // 2
 
-        if filho_esq < tamanho and self.heap[filho_esq][1] < self.heap[menor][1]:
-            menor = filho_esq
-        if filho_direito < tamanho and self.heap[filho_direito][1] < self.heap[menor][1]:
-            menor = filho_direito
+    def _heapify_down(self, index):
+        """Ajusta o heap para baixo"""
+        smallest = index
+        left_child = 2 * index + 1
+        right_child = 2 * index + 2
 
-        if menor != indice:
-            self.heap[indice], self.heap[menor] = self.heap[menor], self.heap[indice]
-            self._heapify(menor, tamanho)
+        if left_child < len(self.heap) and self.heap[left_child][1] < self.heap[smallest][1]:
+            smallest = left_child
+
+        if right_child < len(self.heap) and self.heap[right_child][1] < self.heap[smallest][1]:
+            smallest = right_child
+
+        if smallest != index:
+            self.heap[index], self.heap[smallest] = self.heap[smallest], self.heap[index]
+            self._heapify_down(smallest)
 
     def inserir(self, nome, prioridade):
-        """Insere um novo elemento na fila de prioridade"""
+        """Insere um novo elemento na fila de prioridade."""
         self.heap.append((nome, prioridade))
-        indice = len(self.heap) - 1
-
-        # desce arvore e troca se prioridade filho < prioridade pai
-        while indice > 0:
-            pai = (indice - 1) // 2
-            if self.heap[indice][1] < self.heap[pai][1]:
-                self.heap[indice], self.heap[pai] = self.heap[pai], self.heap[indice]
-                indice = pai
-            else:
-                break
+        self._heapify_up(len(self.heap) - 1)
 
     def remover(self):
-        """Remove o item de menor prioridade da fila"""
+        """Remove o item de menor prioridade da fila."""
         if len(self.heap) == 0:
             return None
         if len(self.heap) == 1:
@@ -40,10 +40,22 @@ class MinHeap:
 
         raiz = self.heap[0]
         self.heap[0] = self.heap.pop()
-
-        self._heapify(0, len(self.heap))
+        self._heapify_down(0)
 
         return raiz
+
+    def modificar_processo(self, nome_processo, nova_prioridade):
+        """Modifica a prioridade de um processo na fila."""
+        for i in range(len(self.heap)):
+            if self.heap[i][0] == nome_processo:
+                prioridade_antiga = self.heap[i][1]
+                self.heap[i] = (nome_processo, nova_prioridade)
+
+                if nova_prioridade < prioridade_antiga:
+                    self._heapify_up(i)
+                else:
+                    self._heapify_down(i)
+                return
 
     def esta_vazia(self):
         """Verifica se a fila de prioridade está vazia"""
@@ -56,7 +68,7 @@ class MinHeap:
             resultado.append(self.remover())
         return resultado
 
-    def mostrar(self,ctx):
+    def mostrar(self, ctx):
         for item in self.heap:
             print(f"Processo: {item[0]}, Prioridade: {item[1]}")
 
@@ -76,7 +88,7 @@ def iniciar():
     executar = {
         "1": inserir_processo,
         "2": executar_proximo_processo,
-        "3": modificar_processo,
+        "3": altera_processo,
         "4": processos.mostrar,
         "sair": lambda x: print("Saindo do programa.")
     }
@@ -86,17 +98,10 @@ def iniciar():
         opcao_selecionada = mostrar_opcoes()
 
 
-
-def modificar_processo(fila):
+def altera_processo(fila):
     nome_processo = input("Digite o nome do processo que deseja modificar: ")
-    for i in range(len(fila.heap)):
-        if fila.heap[i][0] == nome_processo:
-            nova_prioridade = int(input(f"Digite a nova prioridade de {nome_processo}: "))
-            fila.heap[i] = (nome_processo, nova_prioridade)
-            fila._heapify(i, len(fila.heap))
-            print(f"Processo {nome_processo} modificado com sucesso.")
-            print(f"heap após: {fila.heap}")
-            return
+    nova_prioridade = int(input("Digite a nova prioridade do processo: "))
+    fila.modificar_processo(nome_processo, nova_prioridade)
 
 
 def executar_proximo_processo(fila):
@@ -113,6 +118,7 @@ def inserir_processo(fila):
     prioridade = int(input("Digite a prioridade do processo: "))
     fila.inserir(nome, prioridade)
 
+
 def mostrar_opcoes():
     return input("""
     Escolha uma opção:
@@ -122,6 +128,7 @@ def mostrar_opcoes():
     4 - Mostrar fila de processos
     sair - Sair do programa
     """)
+
 
 # Garantir que o código seja executado corretamente no terminal
 if __name__ == "__main__":
