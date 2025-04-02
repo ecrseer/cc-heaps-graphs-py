@@ -1,4 +1,6 @@
 # Definição dos possíveis movimentos do cavalo
+import time
+
 movimentos = [
     (2, 1), (2, -1), (-2, 1), (-2, -1),
     (1, 2), (1, -2), (-1, 2), (-1, -2)
@@ -14,6 +16,7 @@ def movimentos_possiveis(tabuleiro, x, y, dimXdim):
     # Retorna a lista de movimentos válidos a partir de (x, y).
     moves = []
     for dx, dy in movimentos:
+        print(f"dx: {dx}, dy: {dy}")
         nx, ny = x + dx, y + dy
         if dentro_tabuleiro(nx, ny, dimXdim) and tabuleiro[nx][ny] == -1:
             moves.append((nx, ny))
@@ -56,10 +59,11 @@ def imprimir_tabuleiro(tabuleiro):
         print(" ".join(f"{num:2}" for num in linha))
 
 
-# Definição do tamanho do tabuleiro e execução do algoritmo
-N = 8  # Tabuleiro 8x8
+inicio = time.time()
+N = 5  # Tabuleiro 8x8
 solucao = passeio_do_cavalo(N)
 
 if solucao:
     print("\nPasseio do Cavalo encontrado:")
     imprimir_tabuleiro(solucao)
+    print(f"Tempo de execução: {time.time() - inicio:.12f} milisegundos.")

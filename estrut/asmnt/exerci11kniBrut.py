@@ -1,3 +1,5 @@
+import time
+
 movimentos = [
     (2, 1), (2, -1), (-2, 1), (-2, -1),
     (1, 2), (1, -2), (-1, 2), (-1, -2)
@@ -15,6 +17,7 @@ def passeio_cavalo_forca_bruta(tabuleiro, x, y, move_count, dimXdim):
 
     for dx, dy in movimentos:
         nx, ny = x + dx, y + dy
+        print(f"nx: {nx}, ny: {ny}")
         if dentro_tabuleiro(nx, ny, dimXdim) and tabuleiro[nx][ny] == -1:
             tabuleiro[nx][ny] = move_count
             if passeio_cavalo_forca_bruta(tabuleiro, nx, ny, move_count + 1, dimXdim):
@@ -40,8 +43,10 @@ def imprimir_tabuleiro(tabuleiro):
         print(" ".join(f"{num:2}" for num in linha))
 
 
-N = 8
+inicio = time.time()
+N = 5
 solucao = resolver_passeio_cavalo(N)
 if solucao:
     print("\nPasseio do Cavalo encontrado (Força Bruta):")
     imprimir_tabuleiro(solucao)
+    print(f"Tempo de execução: {time.time() - inicio:.12f} milisegundos.")
