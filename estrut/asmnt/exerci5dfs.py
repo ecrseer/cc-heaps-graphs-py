@@ -22,16 +22,19 @@ class Grafo:
         else:
             print(f"O vértice {vertice} não existe no grafo.")
 
-    def bfs(self, inicio):
-        visitados = set()
-        fila = [inicio]
+    def dfs_recursivo(self, vert_atual, visitados=None):
+        # Executa a busca em profundidade (DFS) de forma recursiva para explorar rotas.
+        if visitados is None:
+            visitados = set()
 
-        while fila:
-            vertice = fila.pop(0)
-            if vertice not in visitados:
-                print(vertice, end=" ")
-                visitados.add(vertice)
-                fila.extend(self.lista_adjacencia[vertice])
+        print(vert_atual, end=" => ")
+        visitados.add(vert_atual)  # Marca como visitado
+
+        for vizinho in self.lista_adjacencia[vert_atual]:
+            if vizinho not in visitados:
+                self.dfs_recursivo(vizinho, visitados)
+
+        return visitados
 
 
 estacoes = ["A", "B", "C", "D", "E", "F"]
@@ -46,8 +49,8 @@ conexoes = [("A", "B"), ("A", "C"), ("B", "A"), ("B", "D"), ("B", "E"),
 for est1, est2 in conexoes:
     grafo.adicionar_aresta(est1, est2)
 
-# Executando BFS a partir da estação "A"
-print("Busca em Largura (BFS) a partir de A:")
-grafo.bfs("A")
+
+print("DFS  a partir de A:")
+grafo.dfs_recursivo("A")
 
 grafo.mostrar_grafo()
